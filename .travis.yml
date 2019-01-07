@@ -11,3 +11,6 @@ before_install:
 # Run Unit Test and Integration Tests
 script:
   - mvn verify
+cache:
+  directories:
+  - "$HOME/.m2/repository"
