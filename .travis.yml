@@ -14,9 +14,23 @@ script:
   -Dsonar.organization=nkpf-github \
   -Dsonar.host.url=https://sonarcloud.io \
   -Dsonar.login=$SONAR_TOKEN
+    # Login to Docker hub
+  - docker login -u $DOCKER_USER -p $DOCKER_PASS
+  # Tag text according to the branch
+  - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH; fi`
+  # Image name
+  - export IMAGE_NAME=takimatraining/sample-application
+  # Build the image (see Dockerfile) and tag it with the commit ID
+  - docker build -t $IMAGE_NAME:$TRAVIS_COMMIT .
+  # Retag the image with the previously choosen tag
+  - docker tag $IMAGE_NAME:$TRAVIS_COMMIT $IMAGE_NAME:$TAG
+  # Push the tagged image to Docker Hub
+  - docker push $IMAGE_NAME:$TAG
 cache:
   directories:
   - "$HOME/.m2/repository"
 env:
   global:
-    secure: OjNMB6SCTrPQOmqmz2k3N+FK52ZUD7ZPdhFxmQt0xsu219ycVSbCMeQ1jcQdU5qKkNjh4v/ijurneOhehEsjushXrL4vHkFTg56aqVbeRmBuWbXLGoeU4Y9V/rYz5Dx+JxdBjc6/sSYmFNqmzL3HhEghvtysV6wH4IVNhU4gLqUWs3t0Hgqq3vdbWQCdbAH93ayWIMxyDrg34VOAYRZcS4bXmM5RjzgOcr/xQKvWuafU+wM09Mv4JyTi5CogvIgGWLeZR8MTpsUq6cmavfN2jILCtpK4oQ8nQXxKRHd40dilZuI7MFvz/RBqiPjjauZ0D1dhqzdFB/xpUogFAsLtnPVuXouZH658gQ/tNDfngXydoanyeRvg1S9PAtN+uCkwF0yC1wDEZwhtR3BUNy+YLHA+P12IXxQpKR1bPz6I+3Q+wcXGSpIQ6Z4XUn6MOfZ2YzWypMtXiqR8AvIVREzShr85QlFrkaY0bTfF2GDAuswbOFxjg4rfVOQtgQUHqZt4BtDjVw1l0dtsR1/1Z+pFchsPf3D/ALOx5kyHTrli66NBz8gZ7Il0/4TmKRFu5m6oby00UNscO13FGIkvkX8HE7jGfS4QxsPTqDsYkPyHly6ilW/j1CO3dxhSv7RwhvStSA07/LuvZAmr210LAM/sH2HUxC/lgaV3UICDp0/hXvQ=
+  - secure: OjNMB6SCTrPQOmqmz2k3N+FK52ZUD7ZPdhFxmQt0xsu219ycVSbCMeQ1jcQdU5qKkNjh4v/ijurneOhehEsjushXrL4vHkFTg56aqVbeRmBuWbXLGoeU4Y9V/rYz5Dx+JxdBjc6/sSYmFNqmzL3HhEghvtysV6wH4IVNhU4gLqUWs3t0Hgqq3vdbWQCdbAH93ayWIMxyDrg34VOAYRZcS4bXmM5RjzgOcr/xQKvWuafU+wM09Mv4JyTi5CogvIgGWLeZR8MTpsUq6cmavfN2jILCtpK4oQ8nQXxKRHd40dilZuI7MFvz/RBqiPjjauZ0D1dhqzdFB/xpUogFAsLtnPVuXouZH658gQ/tNDfngXydoanyeRvg1S9PAtN+uCkwF0yC1wDEZwhtR3BUNy+YLHA+P12IXxQpKR1bPz6I+3Q+wcXGSpIQ6Z4XUn6MOfZ2YzWypMtXiqR8AvIVREzShr85QlFrkaY0bTfF2GDAuswbOFxjg4rfVOQtgQUHqZt4BtDjVw1l0dtsR1/1Z+pFchsPf3D/ALOx5kyHTrli66NBz8gZ7Il0/4TmKRFu5m6oby00UNscO13FGIkvkX8HE7jGfS4QxsPTqDsYkPyHly6ilW/j1CO3dxhSv7RwhvStSA07/LuvZAmr210LAM/sH2HUxC/lgaV3UICDp0/hXvQ=
+  - secure: jXRCrE2KbVnWPk8JXe1vZe3PlBxzkOmM1b9nP7ryLszIMrTebqrvk00804W9WgKUbpGN2Zef9U/M9LHd9OGr/XDtTE/+DYa1e6wKgCuQWeIzDUcaF6lMB16sdW7it30BNh6nRWTaXdfD3sYOGxvUCKSCdjcL9O9r5WnplakJHBWofxpiPsVPeQyjaqHqkwnSaM2EFjwTLTQSChFpHZ6PT3MegHREaKahKgvjge3xCa9NKpQRmT0HlsAYmmAxSbjs+g7u6Yn5JCAWzdRvnAFIbCj90VooPJewtsyoOvUUpsHByBELvj0LS6v2MHmRxrZGFqrZhmuJYQFK+Z54M6nbHtMI9tggCOuK+/kbr7whWe6qOYF+k+f68NitRqKhz1aaN3u0eobQconQdJpDWiI99WVlWuPLX1DG+eHcv4c47V+5rl5S3fkeZZrHO1Ke5IBnuRGeI5O/VTwhJLowZ57U+phweEYzATvzIOvlBbwh78zc7JMGDjglIpW3GI+HxDTiYaZtMTV+3vZS5N4zNrbJtV0kf2+XDx3mcyMjUEJMeKs21r8e/Fna+gY3J5VYjuLjIe3AGCu6k9TE9HoIR1xPwpMG8nTOcqO1XyErlCcU8xWJVvzCNN3C2qDNfum/Z6CxNMBVjic5R/3uJZG8RQKXUth9pYR+KPY+9VTBpqmKMRg=
+  - secure: SXFQTasmTB9TDaAZgE+lTPmnQ80AYIwCfOYHtsWl2Qe4HzyKyFkBGS48uJYM+hyBqV8QELy8llmwoPdwvF4JSj2iuvRzKOXERayUhldNBRbJf4zKkH0qr6foY5/nBYnUgi75dyqRTvarZLqfPpz4NJHWI6Eww9q7kt/9oqlTyF8VWbzXidEzjKuy8xMe2zZVa/ZVFsoIXubFDokXwa3HxXGtTJn1WPpF35WkAfNY+m0pWyIOTcXrMvDO8W18puzX+D+QIw27z7+qgDUkSLIygTGDDsIY7NEamtngMG3Yp5HaxZVdO8AS/5OKoarj9iArWUfT16+AnI0xkC/dwZ/ilzshA+pEP8u6Jl87bT3APfhkv9elNB91TQtW/sVMvWAI4ULgGXxX+ft3oPYUhCDQ3ctzcQiWzfKMUr5Pj3cwC+xJuGWWysCqnn6du7sGVu0FrIAqvDfxn+Vm4Y/UH3k176jkQlolMxiqXOmtvITYXTNmJi2Ke0+tgnQvgeSUT4hLKx4ejzvjCahl2+I+6GL8Cdgciui9NH684LEyJlsZ4C4haqYYv/YmlGh7HeK5NitbvvxLNImlhjC/ZJZIphoYOfQf4ziPCJmytslGcBR8yU6CDbZhdXvjl/dhUIlQ2mxTQ2spHUCJDtAzQCZLjNX13zFMCGZc3SROjB9EIJp4Rtc=
