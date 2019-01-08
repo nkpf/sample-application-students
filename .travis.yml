@@ -19,7 +19,7 @@ script:
 # Tag text according to the branch
 - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH; fi`
 # Image name
-- export IMAGE_NAME=takimatraining/sample-application
+- export IMAGE_NAME=$DOCKER_USER/sample-application
 # Build the image (see Dockerfile) and tag it with the commit ID
 - docker build -t $IMAGE_NAME:$TRAVIS_COMMIT .
 # Retag the image with the previously choosen tag
