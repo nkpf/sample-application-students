@@ -22,14 +22,14 @@ public class DepartmentControllerTestIT {
     @Autowired
     private MockMvc mockMvc;
 
-    @Test
-    @Sql({"/CreateSchema.sql", "/InsertData.sql"})
-    void testGetDepartmentByName() throws Exception {
-        mockMvc.perform(get("/departments/ASI/"))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("id", equalTo(1)))
-            .andExpect(jsonPath("name", equalTo("ASI")));
-    }
+    // @Test
+    // @Sql({"/CreateSchema.sql", "/InsertData.sql"})
+    // void testGetDepartmentByName() throws Exception {
+    //     mockMvc.perform(get("/departments/ASI/"))
+    //         .andExpect(status().isOk())
+    //         .andExpect(jsonPath("id", equalTo(1)))
+    //         .andExpect(jsonPath("name", equalTo("ASI")));
+    // }
 
     @Test
     @Sql({"/CreateSchema.sql", "/InsertData.sql"})
