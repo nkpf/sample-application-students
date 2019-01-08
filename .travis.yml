@@ -8,7 +8,7 @@ before_install:
 - docker run -d -p 127.0.0.1:3306:3306 takimatraining/devops-training-db
 - openssl aes-256-cbc -K $encrypted_979808931aa7_key -iv $encrypted_979808931aa7_iv
   -in travis_deploy_rsa.enc -out travis_deploy_rsa -d
-- chmod 600 /tmp/travis_deploy_rsa
+- chmod 600 travis_deploy_rsa
 - eval "$(ssh-agent -s)"
 - ssh-add /tmp/travis_deploy_rsa
 - echo -e "Host $SERVER_IP_ADDRESS\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
