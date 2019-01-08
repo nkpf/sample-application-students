@@ -2,3 +2,4 @@
 [![SonarCloud Coverage](https://sonarcloud.io/api/project_badges/measure?project=nkpf_sample-application-students&metric=coverage)](https://sonarcloud.io/api/project_badges/measure?project=nkpf_sample-application-students&metric=coverage)
 # sample-application-students
  This is a sample application exposing a simple REST API
+a
